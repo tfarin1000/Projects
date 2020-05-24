@@ -1,0 +1,30 @@
+# The gmae generate a random number between 0 and 20 and ask the user to guess the number
+# if the user guessed wrong, he will be given a hint to help him guess the correct number
+
+
+import random
+
+
+def check_guess(right_number, guess_number):
+    if right_number > guess_number:
+        print("The number you guessed is below the number")
+    elif right_number < guess_number:
+        print("The number you guessed is above the number")
+    else:
+        print("congrats! the number " + str(guess_number) + " is the right number!")
+        return False
+
+
+right_num = random.randrange(0, 21)
+guess_num = None
+print("Please guess a number between 0 and 20")
+while right_num != guess_num:
+    try:
+        guess_num = int(input("please insert your guess >>>>> "))
+        if 0 < guess_num < 20:
+            check_guess(right_num, guess_num)
+        else:
+            print("Please choose a number between 0 and 20")
+    except:
+        print("Please choose a valid number")
+
