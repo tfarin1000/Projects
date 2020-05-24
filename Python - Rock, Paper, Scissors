@@ -1,0 +1,61 @@
+# rock paper scissors game
+# random generate answer from the computer
+# ask an input from the user
+# check to see who win or a tie
+import random
+
+# a function that ask the user for his input
+def choose_user_answer():
+    while True:
+        user_answer = input("Choose rock, paper ,scissors! >>>>>  ")
+        if user_answer == "rock" or user_answer == "paper" or user_answer == "scissors":
+            return user_answer
+        elif user_answer == "stop":
+            return user_answer
+        else:
+            print("Please enter a valid choice")
+
+# a function that decide who win or tie 
+def who_win(user_answer, comp_answer):
+    r = "rock"
+    p = "paper"
+    s = "scissors"
+    show_duel = "You chose > " + user_answer + " --------- " + comp_answer + " < Computer chose"
+    if (user_answer == r and comp_answer == r) or (user_answer == p and comp_answer == p) or (user_answer == s and comp_answer == s):
+        print(show_duel)
+        print(" "*17 + "Its a tie!")
+# -----------------------------------------------------
+    if user_answer == r and comp_answer == p:
+        print(show_duel)
+        print(" "*17 + "Computer WIN!")
+    elif user_answer == r and comp_answer == s:
+        print(show_duel)
+        print(" "*18 + "You WIN!")
+# -----------------------------------------------------
+    if user_answer == p and comp_answer == r:
+        print(show_duel)
+        print(" "*18 + "You WIN!")
+    elif user_answer == p and comp_answer == s:
+        print(show_duel)
+        print(" "*17 + "Computer WIN!")
+# -----------------------------------------------------
+    if user_answer == s and comp_answer == r:
+        print(show_duel)
+        print(" "*17 + "Computer WIN!")
+    elif user_answer == s and comp_answer == p:
+        print(show_duel)
+        print(" "*18 + "You WIN!")
+# -----------------------------------------------------
+
+
+print("Hello and welcome to Rock, Paper, Scissors game!!!")
+print("please choose one of the options or write 'stop' to stop the game")
+stop = False
+while not stop:
+    comp_answer = random.choice(["rock", "paper", "scissors"])
+    user_answer = choose_user_answer()
+    if user_answer == "stop":
+        print("Thank you for playing")
+        stop = True
+    else:
+        who_win(user_answer, comp_answer)
