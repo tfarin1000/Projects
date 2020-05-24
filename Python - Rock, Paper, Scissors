@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 # rock paper scissors game
 # random generate answer from the computer
 # ask an input from the user
