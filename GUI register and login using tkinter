@@ -1,0 +1,171 @@
+from tkinter import *
+from tkinter import messagebox
+
+root = Tk()
+
+
+# quit the program
+def exit():
+    root.quit()
+
+
+# a simple explanation while clicking the help
+def explain():
+    text = "Here you can register and log in to the system"
+    messagebox.showinfo("GUI", text)
+
+
+# registration page where you fill up your credentials
+# and send the information to register_file function
+def register():
+    global reg
+    reg = Toplevel()
+    reg.title("Registration")
+
+    l_firstname = Label(reg, text="First Name: ", font=("segoe UI", 14))
+    l_firstname.grid(row=1, column=0, columnspan=3)
+    l_lastname = Label(reg, text="Last Name: ", font=("segoe UI", 14))
+    l_lastname.grid(row=2, column=0, columnspan=3)
+    l_mail = Label(reg, text="Email: ", font=("segoe UI", 14))
+    l_mail.grid(row=3, column=0, columnspan=3)
+
+    option = StringVar()
+    gender1 = Radiobutton(reg, text="MALE", value="male", variable=option)
+    gender2 = Radiobutton(reg, text="FEMALE", value="female", variable=option)
+    gender1.grid(row=4, column=3)
+    gender2.grid(row=4, column=4)
+
+    l_username = Label(reg, text="Username: ", font=("segoe UI", 14))
+    l_username.grid(row=5, column=0, columnspan=3)
+    l_password = Label(reg, text="Password: ", font=("segoe UI", 14))
+    l_password.grid(row=6, column=0, columnspan=3)
+
+    e_firstname = Entry(reg)
+    e_lastname = Entry(reg)
+    e_mail = Entry(reg)
+    e_username = Entry(reg)
+    e_pass = Entry(reg, show="*")
+    e_firstname.grid(row=1, column=3, columnspan=3)
+    e_lastname.grid(row=2, column=3, columnspan=3)
+    e_mail.grid(row=3, column=3, columnspan=3)
+    e_username.grid(row=5, column=3, columnspan=3)
+    e_pass.grid(row=6, column=3, columnspan=3)
+    e_firstname.focus()
+    b1 = Button(reg, text="OK", command=lambda: register_file(e_firstname.get(), e_lastname.get(), e_mail.get(), e_username.get(), e_pass.get()))
+    b1.grid(row=7, column=1)
+
+
+# checks to see if the username exist
+# if not the user is being registered in the file
+def register_file(firstname, lastname, mail, username, password):
+    user = firstname + "," + lastname + "," + mail + "," + username + "," + password
+    exist = False
+    with open('file_usernames.txt', "r") as file_username:
+        for line in file_username:
+            loginInfo = line.strip().split(",")
+            if username == loginInfo[3]:
+                exist = True
+                break
+        file_username.close()
+    if exist:
+        messagebox.showinfo("Error", "username already exist")
+    else:
+        with open('file_usernames.txt', 'a') as file_username:
+            file_username.write(user)
+            file_username.write("\n")
+            messagebox.showinfo("Success", "Registration complete")
+            reg.destroy()
+
+
+# the login page
+# send the login credentials to the check_login function
+def logIn():
+    global log
+    log = Toplevel()
+    log.title("Login")
+
+    login_username = Label(log, text="Username: ", font=("segoe UI", 14))
+    login_username.grid(row=1, column=0, columnspan=3)
+    login_password = Label(log, text="Password: ", font=("segoe UI", 14))
+    login_password.grid(row=2, column=0, columnspan=3)
+    e_login_username = Entry(log)
+    e_login_password = Entry(log, show="*")
+    e_login_username.grid(row=1, column=3, columnspan=3)
+    e_login_password.grid(row=2, column=3, columnspan=3)
+    e_login_username.focus()
+    b1 = Button(log, text="OK", command=lambda: check_login(e_login_username.get(), e_login_password.get()))
+    b1.grid(row=3, column=1)
+
+
+# check if the login credentials are existing
+# if so, the function logged is called
+def check_login(username, password):
+    file = 'file_usernames.txt'
+    auth = False
+    with open(file, "r") as file_username:
+        for line in file_username:
+            loginInfo = line.strip().split(",")
+            if username == loginInfo[3] and password == loginInfo[4]:
+                auth = True
+                break
+    if auth:
+        messagebox.showinfo("Logged In", "welcome " + loginInfo[0] + " " + loginInfo[1])
+        log.destroy()
+        logged(loginInfo[0], loginInfo[1], loginInfo[2], loginInfo[3])
+    else:
+        messagebox.showinfo("Error", "unknown username or password")
+
+    file_username.close()
+
+
+# when a user logged in this page shows all of his credentials
+def logged(firstname, lastname, email, username):
+    top_logged = Toplevel()
+    top_logged.geometry("200x200+200+500")
+    top_logged.title(firstname + " " + lastname)
+    top_logged.minsize(344, 200)
+    top_logged.maxsize(500, 500)
+    top_logged.configure(bg="#3e5063")
+
+    l_about = Label(top_logged, text="about you", font=("segoe UI", 14), bg=backGround, foreground="white")
+    l_about.grid(row=0, column=1)
+    l_firstname = Label(top_logged, text="First Name: " + firstname, font=("segoe UI", 14), bg=backGround, foreground="white")
+    l_firstname.grid(row=1, column=2)
+    l_lastname = Label(top_logged, text="Last Name: " + lastname, font=("segoe UI", 14), bg=backGround, foreground="white")
+    l_lastname.grid(row=2, column=2)
+    l_email = Label(top_logged, text="Email: " + email, font=("segoe UI", 14), bg=backGround, foreground="white")
+    l_email.grid(row=3, column=2)
+    l_username = Label(top_logged, text="Username: " + username, font=("segoe UI", 14), bg=backGround, foreground="white")
+    l_username.grid(row=4, column=2)
+
+
+backGround = "#3e5063"
+
+menu = Menu(root)
+root.config(menu=menu)
+
+file_menu = Menu(menu)
+menu.add_cascade(label="File", menu=file_menu)
+file_menu.add_command(label="Exit", command=exit)
+
+help_menu = Menu(menu)
+menu.add_cascade(label="Help", menu=help_menu)
+help_menu.add_command(label="What is this?", command=explain)
+
+root.geometry("200x200+200+500")
+root.title("Login and Registration")
+root.minsize(344, 200)
+root.maxsize(500, 500)
+root.configure(bg=backGround)
+
+labelName1 = Label(root, text="Welcome", font=("segoe UI", 14), bg=backGround, foreground="white")
+labelName2 = Label(root, text="choose what you want", font=("segoe UI", 14), bg=backGround, foreground="white")
+labelName1.grid(row=0, column=1)
+labelName2.grid(row=1, column=1)
+
+button1 = Button(root, text="Register", command=register, font=("segoe UI", 14), bg=backGround, foreground="white")
+button2 = Button(root, text="LogIn", command=logIn, bg=backGround, font=("segoe UI", 14), foreground="white")
+button1.grid(row=3, column=0)
+button2.grid(row=3, column=3)
+
+root.mainloop()
